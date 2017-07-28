@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-vector<int> selection_sort(vector<int> A)
+vector<int> selection_sort(vector<int>& A)
 {
     for (int i=0;i<A.size();i++)
         {   int cur_min=i;
