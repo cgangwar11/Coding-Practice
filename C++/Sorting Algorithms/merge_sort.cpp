@@ -45,12 +45,14 @@ std::vector<int> Merge(std::vector<int> A,std::vector<int> B)
 
 
 
-std::vector<int> MergeSort(std::vector<int> A)
+std::vector<int> MergeSort(std::vector<int>& A)
 {
     if (A.size()==1)
-        return A
+        return A;
+    std::vector<int> a(A.begin(),A.begin()+A.size()/2);
+    std::vector<int> b(A.begin()+A.size()/2,A.end());
 
-    return Merge(MergeSort(A),MergeSort(B))
+    return Merge(MergeSort(a),MergeSort(b));
 
 }
 
@@ -76,7 +78,7 @@ int main()
     }
 
  // vector<int> A(7,{1,2,0,1,5,4,2});
-    A=Merge(A,B);
+    A=MergeSort(A);
     for (int i=0;i<A.size();i++)
         cout << A[i] << " " ;
     return 0;
