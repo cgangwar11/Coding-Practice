@@ -10,6 +10,7 @@ void print2d(const std::vector<std::vector<string> >& ans)
     			cout << ans[i][j] << " "  ;
     			/* code */
     		}
+    		cout << ans[i].size() ;
     		cout << endl;
     	}
 }
@@ -30,24 +31,30 @@ int ispalindrome(string A)
 void part(const string& S,int index,vector<string>& curr,vector<vector<string> >& ans)
 {   
 
-    if(index>=S.length()+1)
+    if(index>=S.length())
+
+    	{	if(S!="")
+    			curr.push_back(S);
+    		ans.push_back(curr);
+    		if(S!="")
+    			curr.pop_back();
+    		return;
+    	}
+
+    for(int i=0;i<S.length();i+=1)    
     {
-        ans.push_back(curr);
-        return;
-    }   
+
+        string P(S.begin(),S.begin()+i+1);
+        string Q(S.begin()+i+1,S.end());
 
 
-    for(int i=1;i<=S.length();i+=1)
-    {
-        string P(S.begin(),S.begin()+i);
-        string Q(S.begin()+i,S.end());
-;
         index=i;
-        // else
-        //     return;
-        curr.push_back(P);
-        part(Q,index,curr,ans);
-        curr.pop_back();
+        if(ispalindrome(P))
+			{
+				curr.push_back(P);
+	       		part(Q,index+1,curr,ans);
+	        	curr.pop_back();
+	    	}
         
     }
     // index=0;
@@ -64,7 +71,7 @@ void partition(string A)
 //   cout << ispalindrome("aa");
   	part(A,0,curr,ans);
 
-    cout << ans.size() << endl;
+    // cout << ans.size() << endl;
     print2d(ans);
 }
 
@@ -72,7 +79,8 @@ void partition(string A)
 
 int main()
 {
-    string str = "efe";
+
+    string str = "nitish";
     // string p(str.begin(),str.begin()+2);
     // string q(str.begin()+2,str.end());
     // cout << p << "  " << q <<  endl;
