@@ -34,7 +34,7 @@ void generatesets(std::vector<int>& A,int index,std::vector<int>& curr,vector<ve
 int main()
 {
 
-    int A[4]={8,3,5,7};
+    int A[4]={3,3,5,7};
     vector<int> B(A,A+4);
     list<int> C(A,A+3);
     vector<vector<int> > ans;
