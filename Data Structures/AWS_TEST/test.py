@@ -1,17 +1,53 @@
 import pickle
 import numpy as np
-x, xt, y, yt = pickle.load(open('A1.pickle'))
-print x.shape, xt.shape, y.shape, yt.shape
+x, xt, y, yt, test = pickle.load(open('A1.pickle', 'rb'))
+yid = pickle.load(open('ids.pickle', 'rb'))
+print x.shape, xt.shape, y.shape, yt.shape, test.shape
 
-# from sklearn.ensemble import RandomForestClassifier
-# from sklearn.metrics import accuracy_score, confusion_matrix
-# clf1 = RandomForestClassifier(n_estimators=5000)
-# clf1.fit(x, y)
-# pred = clf1.predict(xt)
-# print accuracy_score(yt, pred)
-# print confusion_matrix(yt, pred)
 labels = y
 balanced = True
+
+
+def sub(out, clf):
+    global yid
+    pred_full = zip(yid, out)
+    out1 = sorted(pred_full, key=lambda x: -1 * x[1][1])
+    out2 = sorted(pred_full, key=lambda x: -1 * x[1][2])
+    out3 = sorted(pred_full, key=lambda x: -1 * x[1][3])
+    from collections import OrderedDict
+    ans = OrderedDict()
+    output = {0: 'Supp', 2: 'Credit', 1: 'Elite'}
+    count = 450
+    pp = 0
+    for i, j in out1:
+
+        if i not in ans.keys() and pp < count:
+            ans[i] = output[0]
+    #         print "d"
+            pp += 1
+    count = 350
+    pp = 0
+    for i, j in out2:
+        #     pp=0
+        if i not in ans.keys() and pp < count:
+            ans[i] = output[1]
+    #         print "dd"
+            pp += 1
+    count = 200
+    pp = 0
+    for i, j in out3:
+        #     pp=0
+        if i not in ans.keys() and pp < count:
+            ans[i] = output[2]
+    #         print "ddd"
+            pp += 1
+    import csv
+
+    with open(clf, 'wb') as out:
+        csv_out = csv.writer(out)
+
+        for row in ans.items():
+            csv_out.writerow(row)
 
 
 def count(A):
@@ -32,12 +68,14 @@ count(y)
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
-clf1 = RandomForestClassifier(n_estimators=3000, n_jobs=-1)
+clf1 = RandomForestClassifier(n_estimators=30, n_jobs=-1)
 clf1.fit(x, y)
 pred = clf1.predict(xt)
 print accuracy_score(yt, pred)
 print confusion_matrix(yt, pred)
-
+out = clf1.predict_proba(test)
+sub(out, 'ppp.csv')
+# pred_full = zip(yid,out)
 # # # Randomized Search for Algorithm Tuning
 # import numpy as np
 # from scipy.stats import uniform as sp_rand
