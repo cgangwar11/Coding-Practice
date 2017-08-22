@@ -15,8 +15,10 @@ def count(threshold):
 
 count(0.4)
 
-ids = sorted(zip(out, yid), key=lambda x: -1 * x[0])[:1000]
-predicted = best_sub[:, 0]
-list1 = list(ids)
+ids = sorted(zip(out, yid), key=lambda x: -1*x[0])[:1000]
+predicted = [i for i,j in best_sub]
+list1 = [i for j,i in ids]
 list2 = list(predicted)
 print len(list(set(list1).intersection(list2)))
+print predicted[:5]
+print ids[:5]
