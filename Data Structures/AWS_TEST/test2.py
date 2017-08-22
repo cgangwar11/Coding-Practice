@@ -140,14 +140,14 @@ param['nthread'] = 4
 param['eval_metric'] = 'auc'
 plst = param.items()
 evallist = [(dtest, 'eval'), (dtrain, 'train')]
-num_round = 30000
+num_round = 10
 bst = xgb.train(plst, dtrain, num_round, evallist, early_stopping_rounds=10)
 ypred = bst.predict(dleadr, ntree_limit=bst.best_ntree_limit)
-pickle.dump(ypred,open('probability.pickle','wb'))
-
-
-print ypred[:5]
-
+ypred1 = bst.predict(dleadr, ntree_limit=bst.best_score)
+# print ypred[:5]
+pickle.dump(ypred1, open('probabilty1.pickle', 'wb'))
+pickle.dump(ypred, open('probabilty.pickle', 'wb'))
 
 # yb.shape
 # train(..., evals=evals, early_stopping_rounds=10)
+

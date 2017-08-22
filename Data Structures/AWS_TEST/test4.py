@@ -20,7 +20,7 @@ labels = pickle.load(open('labels.pickle'))
 # In[3]:
 
 labels_type_1 = labels
-labels_type_2 = [min(1, i) for i in labels]
+labels_type_2 = [1 - min(1, i) for i in labels]
 
 
 # In[4]:
@@ -140,14 +140,28 @@ param['nthread'] = 4
 param['eval_metric'] = 'auc'
 plst = param.items()
 evallist = [(dtest, 'eval'), (dtrain, 'train')]
-num_round = 30000
+num_round = 10000
 bst = xgb.train(plst, dtrain, num_round, evallist, early_stopping_rounds=10)
 ypred = bst.predict(dleadr, ntree_limit=bst.best_ntree_limit)
-pickle.dump(ypred,open('probability.pickle','wb'))
-
-
-print ypred[:5]
-
-
+# ypred1 = bst.predict(dleadr, ntree_limit=bst.best_score)
+# print ypred[:5]
+# pickle.dump(ypred1, open('probabilty1.pickle', 'wb'))
+pickle.dump(ypred, open('probabilty.pickle', 'wb'))
+tests = xgb.DMatrix(xt)
 # yb.shape
 # train(..., evals=evals, early_stopping_rounds=10)
+test_pred = bst.predict(tests, ntree_limit=bst.best_ntree_limit)
+ans = []
+for i in test_pred:
+    if i < 0.5:
+        ans.append(0)
+    else:
+        ans.append(1)
+
+
+from sklearn.metrics import confusion_matrix,roc_auc_score
+print confusion_matrix(y2t, ans)
+
+print bst.best_score
+print bst.best_iteration
+print roc_auc_score(y2t,ans)
