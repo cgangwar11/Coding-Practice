@@ -8,7 +8,8 @@ from collections import Counter
 feat_set_1 = pickle.load(open('cont_feat_max.pickle'))
 feat_set_2 = pickle.load(open('cat.pickle'))
 
-
+normal = False
+lda = False
 # In[2]:
 
 labels = pickle.load(open('labels.pickle'))
@@ -27,7 +28,10 @@ def normalize(x):
     return normalize(x)
 
 
-feat_set_1 = normalize(feat_set_1)
+if normal:
+    feat_set_1 = normalize(feat_set_1)
+if normal:
+    feat_set_2 = normalize(feat_set_2)
 
 
 # In[5]:
@@ -43,8 +47,13 @@ def apply_lda(features, val):
     return out
 
 
-out1 = apply_lda(feat_set_1, 4)
-out2 = apply_lda(normalize(feat_set_2), 4)
+out1 = feat_set_1
+out2 = feat_set_2
+
+if lda:
+    out1 = apply_lda(feat_set_1, 4)
+
+    out2 = apply_lda(feat_set_2, 4)
 
 
 # In[6]:
@@ -117,7 +126,7 @@ dtrain = xgb.DMatrix(x, label=binarizer(y2))
 dtest = xgb.DMatrix(xt, label=binarizer(y2t))
 param = {'max_depth': 2, 'eta': 1, 'silent': 1, 'objective': 'binary:logistic'}
 param['nthread'] = 4
-param['eval_metric'] = 'auc'
+param['eval_metric'] = ['auc', 'map']
 plst = param.items()
 evallist = [(dtest, 'eval'), (dtrain, 'train')]
 num_round = 10
