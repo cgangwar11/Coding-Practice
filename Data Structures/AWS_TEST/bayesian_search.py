@@ -63,11 +63,11 @@ def apply_lda(features, test, val):
   return out, out2
 
 
-print feature_all.shape, test_set_all.shape
+#print feature_all.shape, test_set_all.shape
 
 
-from __future__ import print_function
-from __future__ import division
+#from __future__ import print_function
+#from __future__ import division
 
 
 import pandas as pd
@@ -123,7 +123,8 @@ def xgboostcv(max_depth,
                          "log_loss",
                          cv=4).mean()
 
-
+#print "labels_type",len(labels_type_1)
+load_data()
   # Load data set and target values
 train, labels, test, _, _ = feature_all, labels_type_1, test_set_all, None, None
 
