@@ -38,7 +38,7 @@ if normal:
     test_set_2 = normalize(test_set_2)
 
 
-# In[5]:
+# In[5000]:
 
 import sklearn
 
@@ -90,63 +90,63 @@ x, xt, y1, y1t, y2, y2t = split(feature_all)
 # In[43]:
 
 
-# from sklearn.tree import DecisionTreeClassifier
-# from sklearn.neural_network import multilayer_perceptron
-# from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, BaggingClassifier, ExtraTreesClassifier
-# from sklearn.metrics import roc_auc_score, auc, confusion_matrix
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neural_network import multilayer_perceptron
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, BaggingClassifier, ExtraTreesClassifier, GradientBoostingClassifier
+from sklearn.metrics import roc_auc_score, auc, confusion_matrix
 
 
-# def fit_model(clf):
-#     global x, y2, xt, y2t
+def fit_model(clf):
+    global x, y2, xt, y2t
 
-#     clf = RandomForestClassifier(n_estimators=1000, n_jobs=-1, verbose=1, class_weight="balanced")
-#     clf.fit(x, y2)
-#     pred = clf.predict(xt)
+    # clf = RandomForestClassifier(n_estimators=5000000, n_jobs=-1, verbose=1, class_weight="balanced")
+    clf.fit(x, y2)
+    pred = clf.predict(xt)
 
-#     print auc(y2t, pred)
-#     print roc_auc_score(y2t, pred)
-#     print confusion_matrix(y2t, pred)
+    # print auc(y2t, pred)
+    print roc_auc_score(y2t, pred)
+    print confusion_matrix(y2t, pred)
 
 
 # fit_model()
-# models=[AdaBoostClassifier(n_estimators=500),BaggingClassifier(n_estimators=500,n_jobs=-1),ExtraTreesClassifier(n_estimators=500,n_jobs=-1)]
-# for model in models:
-#     fit_model(model)
+models = [RandomForestClassifier(n_estimators=5000, n_jobs=-1, class_weight="balanced"), AdaBoostClassifier(n_estimators=5000), BaggingClassifier(n_estimators=5000), ExtraTreesClassifier(n_estimators=5000, n_jobs=-1, class_weight='balanced'), GradientBoostingClassifier(n_estimators=5000)]
+for model in models:
+    fit_model(model)
 
 
-# # In[35]:
+# # In[35000]:
 
 # Counter(y2t)
 
 
 # In[22]:
 
-from sklearn.preprocessing import OneHotEncoder, label_binarize, LabelBinarizer
+# from sklearn.preprocessing import OneHotEncoder, label_binarize, LabelBinarizer
 
 
-def binarizer(labels):
-    A = LabelBinarizer()
-    return A.fit_transform(labels)
+# def binarizer(labels):
+#     A = LabelBinarizer()
+#     return A.fit_transform(labels)
 
 
-# binarizer(y2t)
-import xgboost as xgb
-# label = np.random.randint(2, size=5) # binary target
-dtrain = xgb.DMatrix(x, label=binarizer(y2))
-dtest = xgb.DMatrix(xt, label=binarizer(y2t))
-dleadr = xgb.DMatrix(test_set_all)
-param = {'max_depth': 2, 'eta': 1, 'silent': 1, 'objective': 'binary:logistic'}
-param['nthread'] = 4
-param['eval_metric'] = 'auc'
-plst = param.items()
-evallist = [(dtest, 'eval'), (dtrain, 'train')]
-num_round = 30000
-bst = xgb.train(plst, dtrain, num_round, evallist, early_stopping_rounds=10)
-ypred = bst.predict(dleadr, ntree_limit=bst.best_ntree_limit)
-pickle.dump(ypred,open('probability.pickle','wb'))
+# # binarizer(y2t)
+# import xgboost as xgb
+# # label = np.random.randint(2, size=5000) # binary target
+# dtrain = xgb.DMatrix(x, label=binarizer(y2))
+# dtest = xgb.DMatrix(xt, label=binarizer(y2t))
+# dleadr = xgb.DMatrix(test_set_all)
+# param = {'max_depth': 2, 'eta': 1, 'silent': 1, 'objective': 'binary:logistic'}
+# param['nthread'] = 4
+# param['eval_metric'] = 'auc'
+# plst = param.items()
+# evallist = [(dtest, 'eval'), (dtrain, 'train')]
+# num_round = 30000
+# bst = xgb.train(plst, dtrain, num_round, evallist, early_stopping_rounds=10)
+# ypred = bst.predict(dleadr, ntree_limit=bst.best_ntree_limit)
+# pickle.dump(ypred,open('probability.pickle','wb'))
 
 
-print ypred[:5]
+# print ypred[:5000]
 
 
 # yb.shape
