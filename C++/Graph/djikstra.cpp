@@ -72,15 +72,43 @@ vector<int> cost_traverse(vector<pair<int,int> > *S,int source,int N,int M)
     return distance;    
 
 }
+
+vector<int> cost_traverse_priority_queue(vector<pair<int,int> > *S,int N)
+{
+    vector<bool> visited(N,false);
+    vector<int> distance(N,INT_MAX);
+    multiset<pair<int,int> > set;
+    set.insert(mp(0,1));
+    while(!set.empty())
+    {
+        pair<int,int> PP=*set.begin();
+        int weight=PP.first,vertex=PP.second;
+        set.erase(set.begin());
+        if (visited[vertex])
+            continue;
+        visited[vertex]=true;
+        for (int i=0;i<S[vertex].size();i++)
+        {
+            int to_vert=S[vertex][i].first,cur_weight=S[vertex][i].second;
+            int possible_len = cur_weight+weight;
+            if (possible_len<distance[to_vert])
+                distance[to_vert]=possible_len; set.insert(mp(cur_weight,to_vert));
+
+        }
+    }
+    return distance;
+
+}
 int main()
 {
     int a,b;
     cin >> a >> b; 
     vector<pair<int,int> > graph[a+2];
     make_weighted_graph(graph,b);
-    print_graph(graph,b);
+    // print_graph(graph,b);
     std::vector<int> ans;
-    ans=cost_traverse(graph,1,a+1,b+1);
+    // ans=cost_traverse(graph,1,a+1,b+1);
+    ans=cost_traverse_priority_queue(graph,a+1);
     FOR(i,ans.size()) if (i>1) cout << ans[i] << " ";
     return 0;
 }
