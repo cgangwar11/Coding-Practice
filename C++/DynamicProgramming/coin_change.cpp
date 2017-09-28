@@ -61,15 +61,52 @@ void calc(int k,vector<int>& A,int* count,vector<int>& visited)
 		// print(A);
 		P.pop_back();
 	}
-
-
-
-
 }
 
 
 
+int calc_tab(int k,vector<int>& A)
+{
 
+	int m=A.size();
+	vector<vector<int> > MEM(m,vector<int>(k+1,0));
+	FOR(i,m)
+	{
+		FOR(j,k+1)
+			{
+				if (j==0)
+				{
+					MEM[i][j]=1;
+				}
+
+				else if (i==0 && j>0)
+				{
+					int a= j%A[i];
+					if (a==0)
+					{
+						MEM[i][j]=1;
+					}
+
+					else if (a!=0)
+					{
+						MEM[i][j]=0;
+					}
+				}
+
+				else
+				{
+					if (j-A[i] >= 0)
+						MEM[i][j]=MEM[i-1][j]+MEM[i][j-A[i]];
+					else
+						MEM[i][j]=MEM[i-1][j];
+				}
+
+			}
+	}
+
+	return MEM[m-1][k];
+
+}
 
 
 int main()
@@ -91,8 +128,8 @@ int main()
 		vector<int> visited(n,0);
 		// print(A);
 		int count=0,index=0;
-		calc(coin,A,&count,visited);
-		cout << count << endl;
+		// calc(coin,A,&count,visited);
+		cout << calc_tab << endl;
 	}
 	return 0;
 }
